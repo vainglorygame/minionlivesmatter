@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Minion Lives Matter</title>
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="assets/tether/dist/css/tether.min.css" />
+        <link rel="stylesheet" href="assets/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="assets/bootstrap-material-design/dist/bootstrap-material-design.min.css" />
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse bg-inverse fixed-top">
+            <a class="navbar-brand" href="alpha.vainsocial.com">Vainsocial</a>
+        </nav>
+
+        <div class="container" style="padding: 3rem 1.5rem;">
+            <div class="container">
+                <h1>Minion Lives Matter</h1>
+                <p>
+                    <em>Based on Vainsocial users' data from the past 24 hours that by no means is representative to the whole player base of Vainglory. {{ sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL") }} matches are taken into account for this calculation.</em>
+                    <noscript>This site works without JavaScript! However, be aware that live stats won't update.</noscript>
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title"><span id="minions-killed-now">0</span> Minions died</h4>
+                    <p class="card-text">since you opened this page</p>
+                    <script type="text/javascript">
+                        var minions_per_second = {{ sql_val("SELECT SUM(minion_kills)/SUM(match.duration)::FLOAT FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }};
+                        var minions = 0;
+                        // sum(minions killed) / sum(game lengh s)
+                        setInterval(() => {
+                            minions += minions_per_second;
+                            $("#minions-killed-now").text(Math.floor(minions));
+                        }, 1000);
+                    </script>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT COUNT((item_grants->>'*1045_Item_FountainOfRenewal*')::INT)-COUNT((item_uses->>'*1045_Item_FountainOfRenewal*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }} Fountains</h4>
+                    <!-- sum(FoR bought) - sum(FoR used) -->
+                    <p class="card-text">did not help their team</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL") }} Minions</h4>
+                    <p class="card-text">are needed to unleash a Kraken</p>
+                    <!-- 1 wave = 3m * 1CS/m + 1m * 2CS/m = 5CS, 3 waves/min = 15CS/min = 5m/min -->
+                    <!-- (sum(game length s / 60)min * 5m/min) / sum(krakens) -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT SUM(participant.crystal_mine_captures) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }} Crystal Sentries</h4>
+                    <!-- sum(miners) -->
+                    <p class="card-text">got slaugthered</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT SUM((participant.item_sells->>'*1038_Item_Flare*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }} Flares</h4>
+                    <!-- sum(flares sold) -->
+                    <p class="card-text">got thrown into the trash</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Every {{ sql_val("SELECT SUM(match.duration)/60 / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT)) FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }} minutes</h4>
+                    <!-- sum(game length s)/60 / (sum(infusion wp) + sum(infusion cp)) -->
+                    <p class="card-text">A hero gets high on infusions</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT SUM((item_uses->>'*1054_Item_ScoutTrap*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }} Scout Traps</h4>
+                    <!-- sum(game length s)/60 / (sum(infusion wp) + sum(infusion cp)) -->
+                    <p class="card-text">Scout Traps made the Halcyon Fold a dangerous place</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE hero='*SAW*' AND created_at > NOW() - '1 day'::INTERVAL") }} Turrets</h4>
+                    <!-- sum(turret_kills) where hero=saw -->
+                    <p class="card-text">were pushed by a SAW</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }} Turrets</h4>
+                    <!-- sum(turret_kills) -->
+                    <p class="card-text">need to be rebuilt by Minion Workers every day</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE NOT winner AND created_at > NOW() - '1 day'::INTERVAL") }} out of {{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }} Minions</h4>
+                    <!-- sum(minions killed) where match lost -->
+                    <!-- sum(minions killed) -->
+                    <p class="card-text">died for nothing</p>
+                </div>
+            </div>
+        </div>
+        <script src="assets/jquery/dist/jquery.min.js" type="text/javascript"></script>
+        <script src="assets/tether/dist/js/tether.min.js" type="text/javascript"></script>
+        <script src="assets/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="assets/bootstrap-material-design/dist/bootstrap-material-design.iife.min.js" type="text/javascript"></script>
+    </body>
+</html>
