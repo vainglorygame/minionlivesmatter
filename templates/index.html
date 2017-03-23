@@ -407,18 +407,6 @@ No diggity, I gotta bag it up."</h4>
         }, 1000);
     </script>
 
-
-    <script type="text/javascript">
-        var minions_per_second = {{ sql_val("SELECT SUM(minion_kills)/SUM(match.duration)::FLOAT FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }};
-        var minions = 0;
-        // sum(minions killed) / sum(game lengh s)
-        setInterval(() => {
-            minions += minions_per_second;
-            $("#minions-killed-now").text(Math.floor(minions));
-        }, 1000);
-    </script>
-
-
     <!--  Just for demo  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.1/masonry.pkgd.min.js"></script>
     
