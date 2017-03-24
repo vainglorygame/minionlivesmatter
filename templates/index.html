@@ -54,12 +54,42 @@
                             <h6></h6>
                             <h4 id="minions-killed-now">0</h4>
                         </div>
-                        <p class="description">have died since you opened this page.</p>      
+                        <p class="description">have died since you opened this page</p>      
                     </div> 
                     <div class="filter"></div>
                 </div> <!-- end card -->    
             </div>
 
+
+            <div class="card-box col-md-4 col-sm-6">      
+                <div class="card text-center" data-background="image" data-src="assets/images/turrets.png">
+                    <h4 class="title title-modern">Turrets</h4>
+                    
+                    <div class="content">
+                        <div class="price">
+                            <h6></h6>
+                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
+                        </div>
+                        <p class="description">rebuilt by workers every day</p>      
+                    </div> 
+                    <div class="filter"></div>
+                </div> <!-- end card -->    
+            </div>
+
+            <div class="card-box col-md-4 col-sm-6">      
+                <div class="card text-center" data-background="image" data-src="assets/images/minions-for-nothing.jpeg">
+                    <h4 class="title title-modern">Minions</h4>
+                    
+                    <div class="content">
+                        <div class="price">
+                            <h6></h6>
+                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE NOT winner AND created_at > NOW() - '1 day'::INTERVAL") }} <b class="currency"><br/>out of {{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<br/></b></h4>
+                        </div>
+                        <p class="description">died for nothing</p>      
+                    </div> 
+                    <div class="filter"></div>
+                </div> <!-- end card -->    
+            </div>
 
             <div class="card-box col-md-4 col-sm-6">      
                 <div class="card text-center" data-background="image" data-src="assets/images/fountain.jpeg">
@@ -71,21 +101,6 @@
                             <h4 id="minions-killed-now">{{ sql_val("SELECT COUNT((item_grants->>'*1045_Item_FountainOfRenewal*')::INT)-COUNT((item_uses->>'*1045_Item_FountainOfRenewal*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}</h4>
                         </div>
                         <p class="description">bought for the looks</p>      
-                    </div> 
-                    <div class="filter"></div>
-                </div> <!-- end card -->    
-            </div>
-
-            <div class="card-box col-md-4 col-sm-6">      
-                <div class="card text-center" data-background="image" data-src="assets/images/kraken.jpg">
-                    <h4 class="title title-modern">Minions</h4>
-                    
-                    <div class="content">
-                        <div class="price">
-                            <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
-                        </div>
-                        <p class="description">are needed to unleash a Kraken</p>      
                     </div> 
                     <div class="filter"></div>
                 </div> <!-- end card -->    
@@ -122,6 +137,36 @@
             </div>
 
             <div class="card-box col-md-4 col-sm-6">      
+                <div class="card text-center" data-background="image" data-src="assets/images/kraken.jpg">
+                    <h4 class="title title-modern">Minions</h4>
+                    
+                    <div class="content">
+                        <div class="price">
+                            <h6></h6>
+                            <h4 id="minions-killed-now">{{ sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                        </div>
+                        <p class="description">are needed to unleash a Kraken</p>      
+                    </div> 
+                    <div class="filter"></div>
+                </div> <!-- end card -->    
+            </div>
+
+            <div class="card-box col-md-4 col-sm-6">
+                <div class="card text-center" data-background="image" data-src="assets/images/minioncandy.jpg">
+                    <h4 class="title title-modern">Minion Candies</h4>
+                    
+                    <div class="content">
+                        <div class="price">
+                            <h6></h6>
+                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM((item_uses->>'*1041_Item_MinionCandy*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                        </div>
+                        <p class="description">Minion parties</p>      
+                    </div> 
+                    <div class="filter"></div>
+                </div> <!-- end card -->    
+            </div>
+
+            <div class="card-box col-md-4 col-sm-6">      
                 <div class="card text-center" data-background="image" data-src="assets/images/infusions.jpg">
                     <h4 class="title title-modern">Infusions</h4>
                     
@@ -130,7 +175,7 @@
                             <h6>every</h6>
                             <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(match.duration)/60 / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT)) FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/>minutes</b></h4>
                         </div>
-                        <p class="description">hero gets high</p>      
+                        <p class="description">a hero gets high</p>      
                     </div> 
                     <div class="filter"></div>
                 </div> <!-- end card -->    
@@ -146,7 +191,7 @@
                             <h6></h6>
                             <h4 id="minions-killed-now">{{ sql_val("SELECT SUM((item_uses->>'*1054_Item_ScoutTrap*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
                         </div>
-                        <p class="description">making Fold a Dangerous Place</p>      
+                        <p class="description">made the Fold a Dangerous Place</p>      
                     </div> 
                     <div class="filter"></div>
                 </div> <!-- end card -->    
@@ -162,42 +207,12 @@
                             <h6></h6>
                             <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE hero='*SAW*' AND created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
                         </div>
-                        <p class="description">pushed by SAW</p>      
+                        <p class="description">were pushed by SAW in the last 24h</p>      
                     </div> 
                     <div class="filter"></div>
                 </div> <!-- end card -->    
             </div>
 
-            <div class="card-box col-md-4 col-sm-6">      
-                <div class="card text-center" data-background="image" data-src="assets/images/turrets.png">
-                    <h4 class="title title-modern">Turrets</h4>
-                    
-                    <div class="content">
-                        <div class="price">
-                            <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
-                        </div>
-                        <p class="description">rebuilt by workers every day</p>      
-                    </div> 
-                    <div class="filter"></div>
-                </div> <!-- end card -->    
-            </div>
-
-
-            <div class="card-box col-md-4 col-sm-6">      
-                <div class="card text-center" data-background="image" data-src="assets/images/minions-for-nothing.jpeg">
-                    <h4 class="title title-modern">Minions</h4>
-                    
-                    <div class="content">
-                        <div class="price">
-                            <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE NOT winner AND created_at > NOW() - '1 day'::INTERVAL") }} <b class="currency"><br/>out of {{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<br/></b></h4>
-                        </div>
-                        <p class="description">died for nothing</p>      
-                    </div> 
-                    <div class="filter"></div>
-                </div> <!-- end card -->    
-            </div>
                         
             <div class="card-box col-md-4 col-sm-6">
                 <div class="card text-center">
@@ -205,7 +220,7 @@
 
                     <div class="content">
                         <p class="description">
-                            Based on Vainsocial users' data from the past 24 hours that by no means is representative to the whole player base of Vainglory. {{ sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL") }} matches are taken into account for this calculation.
+                            Based on Vainsocial users' data from the past 24 hours that by no means is representative to the whole player base of Vainglory. {{ sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL") }} matches are taken into account for the calculations.
                         </p>
                     </div>
                     <div class="filter"></div>
