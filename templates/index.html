@@ -34,7 +34,7 @@
                     <div class="content">
                         <div class="filter filter-red"></div>
                         <h4 class="title title-modern">"Minions Lives Matter."</h4>
-                        <p class="description">Shutterfly@vaisocial</p>
+                        <p class="description">shutterfly@vainsocial</p>
                     </div>
                     
                     <div class="filter"></div>
@@ -43,8 +43,6 @@
         </div>
         
 
-
-<!-- Stormcaller started here -->
         <div class="masonry-container">
             
             <div class="card-box col-md-4 col-sm-6">      
@@ -199,6 +197,19 @@
                     </div> 
                     <div class="filter"></div>
                 </div> <!-- end card -->    
+            </div>
+                        
+            <div class="card-box col-md-4 col-sm-6">
+                <div class="card text-center">
+                    <h4 class="title title-modern">Data</h4>
+
+                    <div class="content">
+                        <p class="description">
+                            Based on Vainsocial users' data from the past 24 hours that by no means is representative to the whole player base of Vainglory. {{ sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL") }} matches are taken into account for this calculation.
+                        </p>
+                    </div>
+                    <div class="filter"></div>
+                </div>
             </div>
 
 
