@@ -2,8 +2,6 @@
 
 import os
 import psycopg2
-import psycopg2.pool
-import psycopg2.extras
 from flask import Flask, g, render_template, send_from_directory
 from werkzeug.contrib.cache import SimpleCache
 
@@ -18,41 +16,40 @@ db_config = {
     "dbname": os.environ.get("POSTGRESQL_DEST_DB") or "vainsocial-web"
 }
 
-def dbpool():
-    if not hasattr(g, "db_pool"):
-        g.db_pool = psycopg2.pool.ThreadedConnectionPool(
-            **db_config, minconn=1, maxconn=10)
-    return g.db_pool
+data = {}
 
-@app.teardown_appcontext
-def db_disconnect(err):
-    if hasattr(g, "db_pool"):
-        g.db_pool.closeall()
+def update_vals():
+    con = psycopg2.connect(**db_config)
+    c = con.cursor()
 
-@app.context_processor
-def sql_processor():
     def sql_val(query):
-        val = cache.get(query)
-        if val is not None:
-            return val.get(0)
-
-        con = dbpool().getconn()
-        c = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
         c.execute(query)
-        val = c.fetchone()
-        cache.set(query, val, timeout=60*60)  # seconds
+        return c.fetchone()[0]
 
-        c.close()
-        dbpool().putconn(con)
+    data["turrets_rebuilt"] = sql_val("SELECT SUM(turret_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL")
+    data["minions_for_nothing"] = sql_val("SELECT SUM(minion_kills) FROM participant WHERE NOT winner AND created_at > NOW() - '1 day'::INTERVAL")
+    data["minions_total"] = sql_val("SELECT SUM(minion_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL")
+    data["fountains_wasted"] = sql_val("SELECT COUNT((item_grants->>'*1045_Item_FountainOfRenewal*')::INT)-COUNT((item_uses->>'*1045_Item_FountainOfRenewal*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL")
+    data["crystal_sentries"] = sql_val("SELECT SUM(participant.crystal_mine_captures) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
+    data["flares_sold"] = sql_val("SELECT SUM((participant.item_sells->>'*1038_Item_Flare*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
+    data["minions_per_kraken"] = sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL")
+    data["minion_candies"] = sql_val("SELECT SUM((item_uses->>'*1041_Item_MinionCandy*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL")
+    data["infusions_min"] = sql_val("SELECT SUM(match.duration)/60 / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT)) FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
+    data["scout_traps"] = sql_val("SELECT SUM((item_uses->>'*1054_Item_ScoutTrap*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
+    data["saw_turrets"] = sql_val("SELECT SUM(turret_kills) FROM participant WHERE hero='*SAW*' AND created_at > NOW() - '1 day'::INTERVAL")
+    data["matches"] = sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL")
+    data["minions_min"] = sql_val("SELECT SUM(minion_kills)/(24*60*60)::FLOAT FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
 
-        return val.get(0)
-
-    return dict(sql_val=sql_val)
+    c.close()
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", data=data)
+
+@app.route("/update")
+def update():
+    update_vals()
+    return render_template("index.html", data=data)
 
 @app.route("/assets/<path:path>")
 def send_assets(path):
