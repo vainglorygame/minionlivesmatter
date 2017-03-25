@@ -279,9 +279,9 @@
         var minions = 0;
         // sum(minions killed) / (seconds per day)
         setInterval(() => {
-            minions += minions_per_second;
+            minions += minions_per_second / 10;
             $("#minions-killed-now").text(Math.floor(minions));
-        }, 1000);
+        }, 100);
     </script>
 
     <!--  Just for demo  -->
