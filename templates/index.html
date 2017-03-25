@@ -68,7 +68,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
+                            <h4>{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
                         </div>
                         <p class="description">rebuilt by workers every day</p>      
                     </div> 
@@ -83,7 +83,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE NOT winner AND created_at > NOW() - '1 day'::INTERVAL") }} <b class="currency"><br/>out of {{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<br/></b></h4>
+                            <h4>{{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE NOT winner AND created_at > NOW() - '1 day'::INTERVAL") }} <b class="currency"><br/>out of {{ sql_val("SELECT SUM(minion_kills) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}<br/></b></h4>
                         </div>
                         <p class="description">died for nothing</p>      
                     </div> 
@@ -98,7 +98,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT COUNT((item_grants->>'*1045_Item_FountainOfRenewal*')::INT)-COUNT((item_uses->>'*1045_Item_FountainOfRenewal*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                            <h4>{{ sql_val("SELECT COUNT((item_grants->>'*1045_Item_FountainOfRenewal*')::INT)-COUNT((item_uses->>'*1045_Item_FountainOfRenewal*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}</h4>
                         </div>
                         <p class="description">bought for the looks</p>      
                     </div> 
@@ -113,7 +113,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(participant.crystal_mine_captures) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                            <h4>{{ sql_val("SELECT SUM(participant.crystal_mine_captures) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
                         </div>
                         <p class="description">slaughtered</p>      
                     </div> 
@@ -128,7 +128,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM((participant.item_sells->>'*1038_Item_Flare*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                            <h4>{{ sql_val("SELECT SUM((participant.item_sells->>'*1038_Item_Flare*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
                         </div>
                         <p class="description">thrown in trash</p>      
                     </div> 
@@ -143,7 +143,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                            <h4>{{ sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL") }}</h4>
                         </div>
                         <p class="description">are needed to unleash a Kraken</p>      
                     </div> 
@@ -158,7 +158,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM((item_uses->>'*1041_Item_MinionCandy*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}</h4>
+                            <h4>{{ sql_val("SELECT SUM((item_uses->>'*1041_Item_MinionCandy*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL") }}</h4>
                         </div>
                         <p class="description">Minion parties</p>      
                     </div> 
@@ -173,7 +173,7 @@
                     <div class="content">
                         <div class="price">
                             <h6>every</h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(match.duration)/60 / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT)) FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/>minutes</b></h4>
+                            <h4>{{ sql_val("SELECT SUM(match.duration)/60 / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT)) FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/>minutes</b></h4>
                         </div>
                         <p class="description">a hero gets high</p>      
                     </div> 
@@ -189,7 +189,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM((item_uses->>'*1054_Item_ScoutTrap*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
+                            <h4>{{ sql_val("SELECT SUM((item_uses->>'*1054_Item_ScoutTrap*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
                         </div>
                         <p class="description">made the Fold a Dangerous Place</p>      
                     </div> 
@@ -205,7 +205,7 @@
                     <div class="content">
                         <div class="price">
                             <h6></h6>
-                            <h4 id="minions-killed-now">{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE hero='*SAW*' AND created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
+                            <h4>{{ sql_val("SELECT SUM(turret_kills) FROM participant WHERE hero='*SAW*' AND created_at > NOW() - '1 day'::INTERVAL") }}<b class="currency"><br/></b></h4>
                         </div>
                         <p class="description">were pushed by SAW in the last 24h</p>      
                     </div> 
@@ -220,8 +220,9 @@
 
                     <div class="content">
                         <p class="description">
-                            Based on Vainsocial users' data from the past 24 hours that by no means is representative to the whole player base of Vainglory. {{ sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL") }} matches are taken into account for the calculations.
+                            Based on Vainsocial users' data from the past 24 hours that by no means is representative to the whole player base of Vainglory.
                         </p>
+			<!-- {{ sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL") }} matches are taken into account for the calculations. -->
                     </div>
                     <div class="filter"></div>
                 </div>
@@ -260,9 +261,9 @@
     
 
     <script type="text/javascript">
-        var minions_per_second = {{ sql_val("SELECT SUM(minion_kills)/SUM(match.duration)::FLOAT FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }};
+        var minions_per_second = {{ sql_val("SELECT SUM(minion_kills)/(24*60*60)::FLOAT FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL") }};
         var minions = 0;
-        // sum(minions killed) / sum(game lengh s)
+        // sum(minions killed) / (seconds per day)
         setInterval(() => {
             minions += minions_per_second;
             $("#minions-killed-now").text(Math.floor(minions));
