@@ -34,11 +34,13 @@ def update_vals():
     data["flares_sold"] = sql_val("SELECT SUM((participant.item_sells->>'*1038_Item_Flare*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
     data["minions_per_kraken"] = sql_val("SELECT (SUM(match.duration)/60*5) / SUM(roster.kraken_captures) FROM match JOIN roster ON roster.match_api_id=match.api_id WHERE match.created_at > NOW() - '1 day'::INTERVAL")
     data["minion_candies"] = sql_val("SELECT SUM((item_uses->>'*1041_Item_MinionCandy*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL")
-    data["infusions_min"] = sql_val("SELECT SUM(match.duration)/60 / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT)) FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
+    data["infusions_secs"] = sql_val("SELECT (24*60*60) / (SUM((participant.item_uses->>'*1052_Item_WeaponInfusion*')::INT) + SUM((participant.item_uses->>'*1053_Item_CrystalInfusion*')::INT))::FLOAT FROM participant JOIN roster ON participant.roster_api_id=roster.api_id JOIN match ON roster.match_api_id=match.api_id WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
     data["scout_traps"] = sql_val("SELECT SUM((item_uses->>'*1054_Item_ScoutTrap*')::INT) FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
     data["saw_turrets"] = sql_val("SELECT SUM(turret_kills) FROM participant WHERE hero='*SAW*' AND created_at > NOW() - '1 day'::INTERVAL")
     data["matches"] = sql_val("SELECT COUNT(*) FROM match WHERE created_at > NOW() - '1 day'::INTERVAL")
     data["minions_min"] = sql_val("SELECT SUM(minion_kills)/(24*60*60)::FLOAT FROM participant WHERE participant.created_at > NOW() - '1 day'::INTERVAL")
+    data["vox_minionkills"] = sql_val("SELECT SUM(minion_kills) FROM participant WHERE hero='*Vox*' AND created_at > NOW() - '1 day'::INTERVAL")
+    data["minionfeet"] = sql_val("SELECT SUM((item_grants->>'*1080_Item_MinionsFoot*')::INT) FROM participant WHERE created_at > NOW() - '1 day'::INTERVAL")
 
     c.close()
 
